@@ -1,0 +1,36 @@
+.dpF {
+    display: flex;
+} 
+
+.fdC {
+    flex-direction: column;
+} 
+
+.jcC {
+    justify-content: center;
+}
+.jcSE {
+    justify-content: space-evenly;
+}
+
+.aiC {
+    align-items: center;
+}
+
+.g1em {
+    gap: 1em;
+}
+
+.w100vw {
+    width: 100vw;
+}
+.w100pc {
+    width: 100%;
+}
+
+.h100vh {
+    height: 100vh;
+}
+.h100pc {
+    height: 100%;
+}
