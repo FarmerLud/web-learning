@@ -1,6 +1,10 @@
+/* displays */
 .dpF {
     display: flex;
 } 
+.dpG {
+    display: grid;
+}
 
 .fdC {
     flex-direction: column;
@@ -17,20 +21,43 @@
     align-items: center;
 }
 
+/* gaps */
+.g0_25em {
+    gap: 0.25em;
+}
+.g0_5em {
+    gap: 0.5em;
+}
 .g1em {
     gap: 1em;
 }
 
+/* grid-template-columns */
+.gtc6fr {
+   grid-template-columns: repeat(6, 1fr); 
+}
+
+/* anchos */
 .w100vw {
     width: 100vw;
 }
 .w100pc {
     width: 100%;
 }
+.w2em {
+    width: 2em;
+}
 
+/* alturas */
 .h100vh {
     height: 100vh;
 }
 .h100pc {
     height: 100%;
+}
+.h2em {
+    height: 2em;
+}
+.h3em {
+    height: 3em;
 }

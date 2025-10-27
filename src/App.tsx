@@ -7,7 +7,7 @@ import { Footer } from './views/app/Footer'
 function App() {
 
   return (
-    <div className='dpF fdC w100vw h100vh'>
+    <div className='dpF fdC w100vw h100vh bgOpaco'>
       <Header/>
       <div className='h100pc'>
         <Outlet/>

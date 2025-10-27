@@ -3,3 +3,36 @@
     padding: 0;
     margin: 0;
 }
+
+body {
+    font-family: monospace;
+    color: var(--colorTexto);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* paleta de colores */
+:root {
+    --colorOpaco: #222224;
+    --colorTexto: #5a5a60;
+    --colorTexto2: #9b9dcd;
+}
+
+/* colores de fondo */
+.bgOpaco {
+    background-color: var(--colorOpaco);
+}
+
+/* colores de texto */
+.coTexto {
+    color: var(--colorTexto);
+}
+.coTexto2 {
+    color: var(--colorTexto2);
+}
+
+/* borders */
+.bTexto {border: 1px solid var(--colorTexto);}

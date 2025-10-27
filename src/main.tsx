@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { PlaraxView } from './views/plarax/PlaraxView.tsx'
 
 const router = createBrowserRouter([
   {
@@ -8,8 +9,8 @@ const router = createBrowserRouter([
     element: <App/>,
     children: [
       {
-        path:'/home',
-        element: <div>Este es mi home</div>
+        path:'/plarax',
+        element: <PlaraxView/>
       },
       {
         path:'/juego1',
