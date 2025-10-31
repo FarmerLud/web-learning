@@ -42,10 +42,10 @@ export const PlaraxView = () => {
                 const nuevasCeldas = [...celdas]
                 nuevasCeldas[index] = letra
                 // actualizar el estado
-                setState({
-                    ...state,
+                setState((prev)=>({
+                    ...prev,
                     celdas: nuevasCeldas
-                })
+                }))
             }
             // si se presionó borrar
             if (event.key === 'Backspace') {
@@ -53,10 +53,10 @@ export const PlaraxView = () => {
                 if (index === 0) return
                 const nuevasCeldas = [...celdas]
                 nuevasCeldas[index - 1] = ''
-                setState({
-                    ...state,
+                setState((prev)=>({
+                    ...prev,
                     celdas: nuevasCeldas
-                })
+                }))
             }
         }
 
@@ -74,33 +74,36 @@ export const PlaraxView = () => {
             const nuevosAciertos = [...aciertos]
 
             const pcArray = palabraCorrecta.split('')
+            const letras = celdas.filter(c => c!=='')
+            const nLetras = letras.length - 6
+            const ultimas6 = letras.slice(-6)
  
             // revisar solo coincidencias exactas
-            celdas.forEach((char, index) => {
+            ultimas6.forEach((char, index) => {
                 if (char === '') return
                 const letraCorrecta = pcArray[index % 6]
                 if (char === letraCorrecta) {
                     pcArray[index] = '' // quitar la letra
-                    nuevosAciertos[index] = '💘'
+                    nuevosAciertos[index + nLetras] = '💘'
                 }
             })
 
             // revisar existencias
-            celdas.forEach((char, index) => {
+            ultimas6.forEach((char, index) => {
                 // no revisar caracteres vacíos
                 if (char === '') return
                 // evitar revisar si tiene coincidencia exacta
-                if (nuevosAciertos[index]==='💘') return
+                if (nuevosAciertos[index + nLetras]==='💘') return
                 // si existe
                 if (pcArray.includes(char)) {
                     // buscar el indice del char en pcArray
                     const i = pcArray.findIndex((letra)=>char ===letra)
                     pcArray[i] = '' 
-                    nuevosAciertos[index] = '💔'
+                    nuevosAciertos[index + nLetras] = '💔'
                 }
                 // si no existe
                 else {
-                    nuevosAciertos[index] = '💜'
+                    nuevosAciertos[index + nLetras] = '💜'
                 }
             })
 
