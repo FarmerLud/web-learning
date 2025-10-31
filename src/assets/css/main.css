@@ -18,7 +18,10 @@ a {
 :root {
     --colorOpaco: #222224;
     --colorTexto: #5a5a60;
+    --colorGray: #7f7f87;
     --colorTexto2: #9b9dcd;
+    --colorGreen: #7bcb39;
+    --colorYellow: #f4b145;
 }
 
 /* colores de fondo */
@@ -26,13 +29,28 @@ a {
     background-color: var(--colorOpaco);
 }
 
+.bgGreen {
+    background-color: var(--colorGreen);
+}
+
+.bgYellow {
+    background-color: var(--colorYellow);
+}
+
+.bgGray {
+    background-color: var(--colorGray);
+}
+
 /* colores de texto */
 .coTexto {
     color: var(--colorTexto);
 }
+
 .coTexto2 {
     color: var(--colorTexto2);
 }
 
 /* borders */
-.bTexto {border: 1px solid var(--colorTexto);}
+.bTexto {
+    border: 1px solid var(--colorTexto);
+}
