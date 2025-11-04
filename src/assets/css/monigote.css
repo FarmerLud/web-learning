@@ -1,3 +1,13 @@
+/* position */
+.posF {
+    position: fixed;
+}
+
+/* top */
+.T0 {
+    top: 0
+}
+
 /* displays */
 .dpF {
     display: flex;
@@ -67,7 +77,31 @@
     color: #ffffff;
 }
 
+/* background */
+.bgDC {
+    background-color: darkcyan;
+}
+.bgSB {
+    background-color: skyblue;
+}
+.bgBlack {
+    background-color: black;
+}
+
 /* fonts */
 .fwB {
     font-weight: bold;
+}
+
+/* border-radius */
+.br0_5em {
+    border-radius: 0.5em;
+}
+
+/* padding */
+.pd0_5em {
+    padding: 0.5em;
+}
+.pd1em {
+    padding: 1em;
 }

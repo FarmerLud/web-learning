@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import { WinPop } from "./popups/WinPop"
+import { FailPop } from "./popups/FailPop"
 
 const palabraCorrecta = 'FIERRO'
 
@@ -126,6 +128,8 @@ export const PlaraxView = () => {
             <div className="dpG gtc6fr g0_25em">
                 {celdas.map((letra, index) => <Celda key={index} letra={letra} acierto={aciertos[index]} />)}
             </div>
+            <WinPop/>
+            <FailPop/>
         </div>
     )
 }
