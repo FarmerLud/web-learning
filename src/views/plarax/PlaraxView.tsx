@@ -3,27 +3,22 @@ import { WinPop } from "./popups/WinPop"
 import { FailPop } from "./popups/FailPop"
 
 const palabraCorrecta = 'FIERRO'
+const arrayInicial = [
+    '', '', '', '', '', '',
+    '', '', '', '', '', '',
+    '', '', '', '', '', '',
+    '', '', '', '', '', '',
+    '', '', '', '', '', '',
+    '', '', '', '', '', '',
+]
 
 export const PlaraxView = () => {
     const [state, setState] = useState({
-        celdas: [
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-        ],
-        aciertos: [
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-            '', '', '', '', '', '',
-        ]
+        celdas: arrayInicial,
+        aciertos: arrayInicial,
+        popup: '' // '' | 'winpop' | 'failpop'
     })
-    const { celdas, aciertos } = state
+    const { celdas, aciertos, popup } = state
 
     // contar cuantas letras no son ''
     const nLetras = celdas.filter((char) => char !== '').length
@@ -31,6 +26,10 @@ export const PlaraxView = () => {
     const nCeldasVacias = celdas.filter((char) => char === '').length
     const nAciertosVacios = aciertos.filter((char) => char === '').length
     const estaRevisado = nCeldasVacias === nAciertosVacios
+    const aciertosNoVacios = aciertos.filter(char => char !== '')
+    const ultimos6NoVacios = aciertosNoVacios.slice(-6)
+    const ganaste = ultimos6NoVacios.every(char => char === '💘') && aciertosNoVacios.length > 0
+    const perdiste = aciertos.slice(-6).every(char => char !== '') && !ganaste
 
     // programar evento para escuchar el teclado
     useEffect(() => {
@@ -39,7 +38,7 @@ export const PlaraxView = () => {
             const letra = event.key.toUpperCase()
             const esLetra = /^[a-zA-ZñÑ]$/.test(letra);
             // si se preisonó una letra
-            if (esLetra && (nLetras === 0 || estaRevisado || !palabraCompletada)) {
+            if (esLetra && (nLetras === 0 || estaRevisado || !palabraCompletada) && !ganaste) {
                 // buscar index cuyo char === ''
                 const index = celdas.findIndex((char) => char === '')
                 // actualizar celdas
@@ -52,9 +51,9 @@ export const PlaraxView = () => {
                 }))
             }
             // si se presionó borrar
-            if (event.key === 'Backspace' && nAciertosVacios > nCeldasVacias ) {
+            if (event.key === 'Backspace' && nAciertosVacios > nCeldasVacias) {
                 let index = celdas.findIndex((char) => char === '')
-                console.log({index})
+                console.log({ index })
                 if (index === 0) return
                 if (index === -1) index = celdas.length
                 const nuevasCeldas = [...celdas]
@@ -78,6 +77,16 @@ export const PlaraxView = () => {
         }
 
     }, [celdas.join(''), estaRevisado])
+
+    useEffect(() => {
+        let popup = ''
+        if (ganaste) popup = 'winpop'
+        if (perdiste) popup = 'failpop'
+        setState((prev) => ({
+            ...prev,
+            popup
+        }))
+    }, [ganaste, perdiste])
 
     const revisarPalabra = () => {
         const nuevosAciertos = [...aciertos]
@@ -122,14 +131,30 @@ export const PlaraxView = () => {
         })
     }
 
+    const closePopup = () => {
+        setState((prev) => ({
+            ...prev,
+            popup: ''
+        }))
+    }
+
+    const otraVez = () => {
+        setState((prev) => ({
+            ...prev,
+            celdas: arrayInicial,
+            aciertos: arrayInicial,
+        }))
+    }
+
     return (
         <div className="dpF fdC aiC jcC g1em">
             <h1>Juego de Plarax</h1>
             <div className="dpG gtc6fr g0_25em">
                 {celdas.map((letra, index) => <Celda key={index} letra={letra} acierto={aciertos[index]} />)}
             </div>
-            <WinPop/>
-            <FailPop/>
+            {(ganaste || perdiste) && <button className="cuP" onClick={otraVez}>JUGAR DENUEVO</button>}
+            {popup === 'winpop' && <WinPop onClose={closePopup} />}
+            {popup === 'failpop' && <FailPop onClose={closePopup} />}
         </div>
     )
 }
