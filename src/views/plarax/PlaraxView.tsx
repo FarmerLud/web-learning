@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { WinPop } from "./popups/WinPop"
 import { FailPop } from "./popups/FailPop"
+import { Button } from "../../components/Button"
 
 const palabraCorrecta = 'FIERRO'
 const arrayInicial = [
@@ -152,7 +153,7 @@ export const PlaraxView = () => {
             <div className="dpG gtc6fr g0_25em">
                 {celdas.map((letra, index) => <Celda key={index} letra={letra} acierto={aciertos[index]} />)}
             </div>
-            {(ganaste || perdiste) && <button className="cuP" onClick={otraVez}>JUGAR DENUEVO</button>}
+            {(ganaste || perdiste) && <Button text="JUGAR OTRA VEZ" onClick={otraVez}/>}
             {popup === 'winpop' && <WinPop onClose={closePopup} />}
             {popup === 'failpop' && <FailPop onClose={closePopup} />}
         </div>

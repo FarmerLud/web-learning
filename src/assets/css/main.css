@@ -14,12 +14,18 @@ a {
     color: inherit;
 }
 
+button {
+    all: unset;
+}
+
 /* paleta de colores */
 :root {
     --colorOpaco: #222224;
+    --colorOpaco2: #38383c;
     --colorTexto: #5a5a60;
     --colorGray: #7f7f87;
     --colorTexto2: #9b9dcd;
+    --colorLila: #6669b6;
     --colorGreen: #7bcb39;
     --colorYellow: #f4b145;
 }
@@ -28,7 +34,9 @@ a {
 .bgOpaco {
     background-color: var(--colorOpaco);
 }
-
+.bgOpaco2 {
+    background-color: var(--colorOpaco2);
+}
 .bgGreen {
     background-color: var(--colorGreen);
 }
@@ -53,4 +61,9 @@ a {
 /* borders */
 .bTexto {
     border: 1px solid var(--colorTexto);
+}
+
+/* hovers */
+.ho-bgLila:hover {
+    background-color: var(--colorLila);
 }
