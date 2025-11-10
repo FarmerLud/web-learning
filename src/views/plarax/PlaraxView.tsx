@@ -2,44 +2,55 @@ import { useEffect, useState } from "react"
 import { WinPop } from "./popups/WinPop"
 import { FailPop } from "./popups/FailPop"
 import { Button } from "../../components/Button"
+import { traerPalabraAleatoria } from "./services/traerPalabraAleatoria"
 
-const palabraCorrecta = 'FIERRO'
-const arrayInicial = [
-    '', '', '', '', '', '',
-    '', '', '', '', '', '',
-    '', '', '', '', '', '',
-    '', '', '', '', '', '',
-    '', '', '', '', '', '',
-    '', '', '', '', '', '',
-]
+const arrInicial = ['']
+const nFilas = 6
 
 export const PlaraxView = () => {
     const [state, setState] = useState({
-        celdas: arrayInicial,
-        aciertos: arrayInicial,
+        palabraCorrecta: '',
+        arrayInicial: arrInicial,
+        celdas: arrInicial,
+        aciertos: arrInicial,
         popup: '' // '' | 'winpop' | 'failpop'
     })
-    const { celdas, aciertos, popup } = state
+    const { celdas, aciertos, popup, palabraCorrecta, arrayInicial } = state
 
     // contar cuantas letras no son ''
-    const nLetras = celdas.filter((char) => char !== '').length
-    const palabraCompletada = nLetras % 6 === 0
+    const ancho = palabraCorrecta.length 
+    const nLetrasNoVacias = celdas.filter((char) => char !== '').length
+    const palabraCompletada = nLetrasNoVacias % ancho === 0
     const nCeldasVacias = celdas.filter((char) => char === '').length
     const nAciertosVacios = aciertos.filter((char) => char === '').length
     const estaRevisado = nCeldasVacias === nAciertosVacios
     const aciertosNoVacios = aciertos.filter(char => char !== '')
-    const ultimos6NoVacios = aciertosNoVacios.slice(-6)
+    const ultimos6NoVacios = aciertosNoVacios.slice(-ancho)
     const ganaste = ultimos6NoVacios.every(char => char === '💘') && aciertosNoVacios.length > 0
-    const perdiste = aciertos.slice(-6).every(char => char !== '') && !ganaste
+    const perdiste = aciertos.slice(-ancho).every(char => char !== '') && !ganaste
 
-    // programar evento para escuchar el teclado
+    // solo se llama la primera vez que renderiza
+    useEffect(() => {
+        traerPalabraAleatoria().then((palabra) => {
+            const arrayInicial = Array(nFilas * palabra.length).fill('')
+            setState((prev) => ({
+                ...prev,
+                palabraCorrecta: palabra,
+                arrayInicial,
+                celdas: arrayInicial,
+                aciertos: arrayInicial
+            }))
+        })
+    }, [])
+
+    // escuchar el teclado
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             console.log(event.key)
             const letra = event.key.toUpperCase()
             const esLetra = /^[a-zA-ZñÑ]$/.test(letra);
             // si se preisonó una letra
-            if (esLetra && (nLetras === 0 || estaRevisado || !palabraCompletada) && !ganaste) {
+            if (esLetra && (nLetrasNoVacias === 0 || estaRevisado || !palabraCompletada) && !ganaste) {
                 // buscar index cuyo char === ''
                 const index = celdas.findIndex((char) => char === '')
                 // actualizar celdas
@@ -65,7 +76,7 @@ export const PlaraxView = () => {
                 }))
             }
             // revisar cuando la palabra está completa
-            if (event.key === 'Enter' && nLetras > 0 && palabraCompletada) {
+            if (event.key === 'Enter' && nLetrasNoVacias > 0 && palabraCompletada) {
                 console.log('REVISARR')
                 revisarPalabra()
             }
@@ -77,7 +88,7 @@ export const PlaraxView = () => {
             window.removeEventListener('keydown', handleKeyDown)
         }
 
-    }, [celdas.join(''), estaRevisado])
+    }, [celdas.join(''), estaRevisado, palabraCorrecta])
 
     useEffect(() => {
         let popup = ''
@@ -94,16 +105,16 @@ export const PlaraxView = () => {
 
         const pcArray = palabraCorrecta.split('')
         const letras = celdas.filter(c => c !== '')
-        const nLetras = letras.length - 6
-        const ultimas6 = letras.slice(-6)
+        const nLetrasPrevias = letras.length - ancho
+        const ultimas6 = letras.slice(-ancho)
 
         // revisar solo coincidencias exactas
         ultimas6.forEach((char, index) => {
             if (char === '') return
-            const letraCorrecta = pcArray[index % 6]
+            const letraCorrecta = pcArray[index % ancho]
             if (char === letraCorrecta) {
                 pcArray[index] = '' // quitar la letra
-                nuevosAciertos[index + nLetras] = '💘'
+                nuevosAciertos[index + nLetrasPrevias] = '💘'
             }
         })
 
@@ -112,17 +123,17 @@ export const PlaraxView = () => {
             // no revisar caracteres vacíos
             if (char === '') return
             // evitar revisar si tiene coincidencia exacta
-            if (nuevosAciertos[index + nLetras] === '💘') return
+            if (nuevosAciertos[index + nLetrasPrevias] === '💘') return
             // si existe
             if (pcArray.includes(char)) {
                 // buscar el indice del char en pcArray
                 const i = pcArray.findIndex((letra) => char === letra)
                 pcArray[i] = ''
-                nuevosAciertos[index + nLetras] = '💔'
+                nuevosAciertos[index + nLetrasPrevias] = '💔'
             }
             // si no existe
             else {
-                nuevosAciertos[index + nLetras] = '💜'
+                nuevosAciertos[index + nLetrasPrevias] = '💜'
             }
         })
 
@@ -148,14 +159,16 @@ export const PlaraxView = () => {
     }
 
     return (
-        <div className="dpF fdC aiC jcC g1em">
+        <div key={palabraCorrecta} className="dpF fdC aiC jcC g1em">
             <h1>Juego de Plarax</h1>
-            <div className="dpG gtc6fr g0_25em">
+            <div className="dpG g0_25em" 
+                style={{gridTemplateColumns:`repeat(${ancho},1fr)`}}
+            >
                 {celdas.map((letra, index) => <Celda key={index} letra={letra} acierto={aciertos[index]} />)}
             </div>
-            {(ganaste || perdiste) && <Button text="JUGAR OTRA VEZ" onClick={otraVez}/>}
+            {(ganaste || perdiste) && <Button text="JUGAR OTRA VEZ" onClick={otraVez} />}
             {popup === 'winpop' && <WinPop onClose={closePopup} />}
-            {popup === 'failpop' && <FailPop onClose={closePopup} />}
+            {popup === 'failpop' && <FailPop onClose={closePopup} palabraCorrecta={palabraCorrecta} />}
         </div>
     )
 }
